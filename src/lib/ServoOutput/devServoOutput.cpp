@@ -188,7 +188,7 @@ static void initialize()
         }
 #endif
         servoPins[ch] = pin;
-        // Initialize all servos to low ASAP
+        // Initialize all servos to float ASAP
         if (pin != UNDEF_PIN)
         {
             if (mode == somOnOff)
@@ -201,14 +201,13 @@ static void initialize()
             }
 
             pinMode(pin, OUTPUT);
-            digitalWrite(pin, LOW);
         }
     }
 }
 
 static int start()
 {
-    // Set PWM DShot Pins to OpenDrain with LOW; i.e. LOW output
+    // Set PWM DShot Pins to OpenDrain; i.e. float output
     for (int ch = 0; ch < GPIO_PIN_PWM_OUTPUTS_COUNT; ++ch)
     {
         const rx_config_pwm_t *chConfig = config.GetPwmChannel(ch);
@@ -216,13 +215,11 @@ static int start()
         if (frequency && servoPins[ch] != UNDEF_PIN)
         {
             pinMode(servoPins[ch], OUTPUT_OPEN_DRAIN);
-            digitalWrite(servoPins[ch], LOW);
         }
 #if defined(PLATFORM_ESP32)
         else if ((eServoOutputMode)chConfig->val.mode == somDShot)
         {
             pinMode(servoPins[ch], OUTPUT_OPEN_DRAIN);
-            digitalWrite(servoPins[ch], LOW);
         }
 #endif
     }
